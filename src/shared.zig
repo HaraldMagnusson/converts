@@ -1,4 +1,5 @@
 const std = @import("std");
+const builtin = @import("builtin");
 
 pub fn bufferedPrint(comptime fmt: []const u8, args: anytype) std.Io.Writer.Error!void {
     var buffer: [1024]u8 = undefined;
@@ -15,9 +16,14 @@ test bufferedPrint {
 
 /// TODO: test in windows
 pub fn stdinHasInput() std.posix.PollError!bool {
+    const stdin_handle = std.fs.File.stdin().handle;
     var poll_request = [_]std.posix.pollfd{
         .{
-            .fd = std.fs.File.stdin().handle,
+            .fd = switch (builtin.target.os.tag) {
+                .linux => stdin_handle,
+                .windows => @ptrCast(stdin_handle),
+                else => @compileError("Unsupported OS."),
+            },
             .events = std.os.linux.POLL.IN,
             .revents = 0,
         },

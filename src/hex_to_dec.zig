@@ -1,5 +1,4 @@
 const std = @import("std");
-const builtin = @import("builtin");
 const shared = @import("shared.zig");
 
 pub fn main() !void {
