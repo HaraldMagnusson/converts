@@ -1,6 +1,6 @@
 const std = @import("std");
 const builtin = @import("builtin");
-const printing = @import("printing.zig");
+const shared = @import("shared.zig");
 
 pub fn main() !void {
     std.log.debug("stdinHasInput: {any}", .{stdinHasInput()});
@@ -27,7 +27,7 @@ pub fn main() !void {
             return err;
         };
 
-        try printing.bufferedPrint("{d}\n", .{nombre});
+        try shared.bufferedPrint("{d}\n", .{nombre});
     }
 }
 
@@ -63,5 +63,5 @@ fn convertFromStdin() !void {
         return err;
     };
 
-    try printing.bufferedPrint("{d}\n", .{nombre});
+    try shared.bufferedPrint("{d}\n", .{nombre});
 }

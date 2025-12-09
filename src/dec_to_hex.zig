@@ -1,5 +1,5 @@
 const std = @import("std");
-const printing = @import("printing.zig");
+const shared = @import("shared.zig");
 
 pub fn main() !void {
     var arena_allocator = std.heap.ArenaAllocator.init(std.heap.page_allocator);
@@ -21,6 +21,6 @@ pub fn main() !void {
             return err;
         };
 
-        try printing.bufferedPrint("{X}\n", .{nombre});
+        try shared.bufferedPrint("{X}\n", .{nombre});
     }
 }
