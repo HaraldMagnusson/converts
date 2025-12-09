@@ -3,6 +3,11 @@ const builtin = @import("builtin");
 const printing = @import("printing.zig");
 
 pub fn main() !void {
+    std.log.debug("stdinHasInput: {any}", .{stdinHasInput()});
+    if (try stdinHasInput()) {
+        try convertFromStdin();
+    }
+
     var arena_allocator = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena_allocator.deinit();
     const arena = arena_allocator.allocator();
@@ -38,4 +43,25 @@ fn stdinHasInput() !bool {
 
     const count = try std.posix.poll(&poll_request, 0);
     return count > 0;
+}
+
+fn convertFromStdin() !void {
+    var stdin_buffer: [4096]u8 = undefined;
+    var stdin_reader = std.fs.File.stdin().reader(&stdin_buffer);
+    const stdin = &stdin_reader.interface;
+
+    // TODO: test delimiters in windows
+    const input_str = try stdin.takeDelimiter('\n') orelse {
+        std.log.debug("empty input", .{});
+        return;
+    };
+    std.log.debug("stdin input: {s}", .{input_str});
+
+    const base_16 = 16;
+    const nombre = std.fmt.parseInt(u256, input_str, base_16) catch |err| {
+        std.log.debug("invalid input: {s}", .{input_str});
+        return err;
+    };
+
+    try printing.bufferedPrint("{d}\n", .{nombre});
 }
