@@ -1,4 +1,5 @@
 const std = @import("std");
+const builtin = @import("builtin");
 const printing = @import("printing.zig");
 
 pub fn main() !void {
@@ -23,4 +24,18 @@ pub fn main() !void {
 
         try printing.bufferedPrint("{d}\n", .{nombre});
     }
+}
+
+/// TODO: test in windows
+fn stdinHasInput() !bool {
+    var poll_request = [_]std.posix.pollfd{
+        .{
+            .fd = std.fs.File.stdin().handle,
+            .events = std.os.linux.POLL.IN,
+            .revents = 0,
+        },
+    };
+
+    const count = try std.posix.poll(&poll_request, 0);
+    return count > 0;
 }
