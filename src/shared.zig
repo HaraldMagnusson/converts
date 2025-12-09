@@ -47,3 +47,35 @@ pub fn convertFromStdin() !void {
 
     try bufferedPrint("{d}\n", .{nombre});
 }
+
+pub const Base = enum {
+    dec,
+    hex,
+};
+
+pub fn convertFromArgs(arena: std.mem.Allocator, comptime from: Base, comptime to: Base) !void {
+    var args = try std.process.argsWithAllocator(arena);
+    defer args.deinit();
+
+    _ = args.skip(); // skip executable name
+    var arg_count: u32 = 0;
+    while (args.next()) |arg| {
+        arg_count += 1;
+        std.log.debug("arg {d}: {s}", .{ arg_count, arg });
+
+        const base = switch (from) {
+            .dec => 10,
+            .hex => 16,
+        };
+        const nombre = std.fmt.parseInt(u256, arg, base) catch |err| {
+            std.log.debug("invalid input: {s}", .{arg});
+            return err;
+        };
+
+        const fmt = switch (to) {
+            .dec => "d",
+            .hex => "X",
+        };
+        try bufferedPrint("{" ++ fmt ++ "}\n", .{nombre});
+    }
+}
