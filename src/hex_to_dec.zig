@@ -5,7 +5,7 @@ const shared = @import("shared.zig");
 pub fn main() !void {
     std.log.debug("stdinHasInput: {any}", .{shared.stdinHasInput()});
     if (try shared.stdinHasInput()) {
-        try shared.convertFromStdin();
+        try shared.convertFromStdin(.hex, .dec);
     }
 
     var arena_allocator = std.heap.ArenaAllocator.init(std.heap.page_allocator);

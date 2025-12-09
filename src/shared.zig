@@ -27,7 +27,7 @@ pub fn stdinHasInput() !bool {
     return count > 0;
 }
 
-pub fn convertFromStdin() !void {
+pub fn convertFromStdin(comptime from: Base, comptime to: Base) !void {
     var stdin_buffer: [4096]u8 = undefined;
     var stdin_reader = std.fs.File.stdin().reader(&stdin_buffer);
     const stdin = &stdin_reader.interface;
@@ -39,13 +39,7 @@ pub fn convertFromStdin() !void {
     };
     std.log.debug("stdin input: {s}", .{input_str});
 
-    const base_16 = 16;
-    const nombre = std.fmt.parseInt(u256, input_str, base_16) catch |err| {
-        std.log.debug("invalid input: {s}", .{input_str});
-        return err;
-    };
-
-    try bufferedPrint("{d}\n", .{nombre});
+    try convert(input_str, from, to);
 }
 
 pub fn convertFromArgs(arena: std.mem.Allocator, comptime from: Base, comptime to: Base) !void {
