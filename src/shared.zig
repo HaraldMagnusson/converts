@@ -48,11 +48,6 @@ pub fn convertFromStdin() !void {
     try bufferedPrint("{d}\n", .{nombre});
 }
 
-pub const Base = enum {
-    dec,
-    hex,
-};
-
 pub fn convertFromArgs(arena: std.mem.Allocator, comptime from: Base, comptime to: Base) !void {
     var args = try std.process.argsWithAllocator(arena);
     defer args.deinit();
@@ -63,19 +58,28 @@ pub fn convertFromArgs(arena: std.mem.Allocator, comptime from: Base, comptime t
         arg_count += 1;
         std.log.debug("arg {d}: {s}", .{ arg_count, arg });
 
-        const base = switch (from) {
-            .dec => 10,
-            .hex => 16,
-        };
-        const nombre = std.fmt.parseInt(u256, arg, base) catch |err| {
-            std.log.debug("invalid input: {s}", .{arg});
-            return err;
-        };
-
-        const fmt = switch (to) {
-            .dec => "d",
-            .hex => "X",
-        };
-        try bufferedPrint("{" ++ fmt ++ "}\n", .{nombre});
+        try convert(arg, from, to);
     }
+}
+
+pub const Base = enum {
+    dec,
+    hex,
+};
+
+fn convert(data: []const u8, comptime from: Base, comptime to: Base) !void {
+    const base = switch (from) {
+        .dec => 10,
+        .hex => 16,
+    };
+    const nombre = std.fmt.parseInt(u256, data, base) catch |err| {
+        std.log.debug("invalid input: {s}", .{data});
+        return err;
+    };
+
+    const fmt = switch (to) {
+        .dec => "d",
+        .hex => "X",
+    };
+    try bufferedPrint("{" ++ fmt ++ "}\n", .{nombre});
 }
