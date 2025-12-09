@@ -33,13 +33,13 @@ pub fn convertFromStdin(comptime from: Base, comptime to: Base) !void {
     const stdin = &stdin_reader.interface;
 
     // TODO: test delimiters in windows
-    const input_str = try stdin.takeDelimiter('\n') orelse {
-        std.log.debug("empty input", .{});
-        return;
-    };
-    std.log.debug("stdin input: {s}", .{input_str});
-
-    try convert(input_str, from, to);
+    while (try stdin.takeDelimiter('\n')) |input| {
+        var word_iterator = std.mem.splitScalar(u8, input, ' ');
+        std.log.debug("stdin input: {s}", .{input});
+        while (word_iterator.next()) |word| {
+            try convert(word, from, to);
+        }
+    }
 }
 
 pub fn convertFromArgs(arena: std.mem.Allocator, comptime from: Base, comptime to: Base) !void {
