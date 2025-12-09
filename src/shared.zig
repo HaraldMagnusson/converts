@@ -77,6 +77,7 @@ pub fn convertFromArgs(
 pub const Base = enum {
     dec,
     hex,
+    bin,
 };
 
 const ConvertError =
@@ -87,6 +88,7 @@ fn convert(data: []const u8, comptime from: Base, comptime to: Base) ConvertErro
     const base = switch (from) {
         .dec => 10,
         .hex => 16,
+        .bin => 2,
     };
     const nombre = std.fmt.parseInt(u256, data, base) catch |err| {
         std.log.debug("invalid input: {s}", .{data});
@@ -96,6 +98,7 @@ fn convert(data: []const u8, comptime from: Base, comptime to: Base) ConvertErro
     const fmt = switch (to) {
         .dec => "d",
         .hex => "X",
+        .bin => "b",
     };
     try bufferedPrint("{" ++ fmt ++ "}\n", .{nombre});
 }

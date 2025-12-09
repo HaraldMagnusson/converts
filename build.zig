@@ -8,6 +8,7 @@ pub fn build(b: *std.Build) void {
     const bases = [_]Base{
         .dec,
         .hex,
+        .bin,
     };
 
     const BaseCombo = struct { from: Base, to: Base };
