@@ -14,23 +14,10 @@ test bufferedPrint {
     try bufferedPrint("I have {s} daughter.\n", .{"one"});
 }
 
-/// TODO: test in windows
-pub fn stdinHasInput() std.posix.PollError!bool {
+/// TODO: test in linux
+pub fn stdinHasInput() bool {
     const stdin_handle = std.fs.File.stdin().handle;
-    var poll_request = [_]std.posix.pollfd{
-        .{
-            .fd = switch (builtin.target.os.tag) {
-                .linux => stdin_handle,
-                .windows => @ptrCast(stdin_handle),
-                else => @compileError("Unsupported OS."),
-            },
-            .events = std.os.linux.POLL.IN,
-            .revents = 0,
-        },
-    };
-
-    const count = try std.posix.poll(&poll_request, 0);
-    return count > 0;
+    return !std.posix.isatty(stdin_handle);
 }
 
 pub const ConvertFromStdinError =
@@ -42,10 +29,10 @@ pub fn convertFromStdin(comptime from: Base, comptime to: Base) ConvertFromStdin
     var stdin_reader = std.fs.File.stdin().reader(&stdin_buffer);
     const stdin = &stdin_reader.interface;
 
-    // TODO: test delimiters in windows
     while (try stdin.takeDelimiter('\n')) |input| {
-        var word_iterator = std.mem.splitScalar(u8, input, ' ');
-        std.log.debug("stdin input: {s}", .{input});
+        const input_stripped = if (input[input.len - 1] == '\r') input[0 .. input.len - 1] else input;
+        var word_iterator = std.mem.splitScalar(u8, input_stripped, ' ');
+        std.log.debug("stdin input: {s}", .{input_stripped});
         while (word_iterator.next()) |word| {
             try convert(word, from, to);
         }

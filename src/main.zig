@@ -9,7 +9,7 @@ pub fn main() !void {
     const convert_to: shared.Base = @enumFromInt(convert_to_int);
 
     std.log.debug("stdinHasInput: {any}", .{shared.stdinHasInput()});
-    if (try shared.stdinHasInput()) {
+    if (shared.stdinHasInput()) {
         try shared.convertFromStdin(convert_from, convert_to);
     }
 
