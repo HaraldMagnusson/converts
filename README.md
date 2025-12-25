@@ -8,10 +8,7 @@ Build using `zig build -Doptimize=ReleaseSmall -p <installation path>`
 
 ## Usage
 
-1. `dectohex <decimal number>`
+1. `<base 1>to<base 2> <number in base 1>`
+2. `echo "<number in base 1>" | <base 1>to<base 2>`
 
-    Outputs `<decimal number>` converted into hexadecimal
-
-2. `hextodec <hexadecimal number>`
-
-    Outputs `<hexadecimal number>` converted into decimal
+    Outputs `<number in base 1>` converted into `<base 2>`
