@@ -47,6 +47,7 @@ pub fn build(b: *std.Build) void {
         const exe = b.addExecutable(.{
             .name = @tagName(combo.from) ++ "to" ++ @tagName(combo.to),
             .root_module = mod,
+            .version = .{ .major = 1, .minor = 0, .patch = 0 },
         });
 
         const install_artifact = b.addInstallArtifact(
