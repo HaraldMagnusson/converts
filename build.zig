@@ -1,5 +1,5 @@
 const std = @import("std");
-const Base = @import("src/shared.zig").Base;
+const Base = @import("src/base.zig").Base;
 
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});

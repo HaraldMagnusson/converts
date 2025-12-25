@@ -1,12 +1,13 @@
 const std = @import("std");
 const shared = @import("shared.zig");
 const config = @import("build_config");
+const Base = @import("base.zig").Base;
 
 pub fn main() !void {
     const convert_from_int: usize = @intFromEnum(config.convert_from);
     const convert_to_int: usize = @intFromEnum(config.convert_to);
-    const convert_from: shared.Base = @enumFromInt(convert_from_int);
-    const convert_to: shared.Base = @enumFromInt(convert_to_int);
+    const convert_from: Base = @enumFromInt(convert_from_int);
+    const convert_to: Base = @enumFromInt(convert_to_int);
 
     std.log.debug("stdinHasInput: {any}", .{shared.stdinHasInput()});
     if (shared.stdinHasInput()) {

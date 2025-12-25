@@ -1,5 +1,6 @@
 const std = @import("std");
 const builtin = @import("builtin");
+const Base = @import("base.zig").Base;
 
 pub fn bufferedPrint(comptime fmt: []const u8, args: anytype) std.Io.Writer.Error!void {
     var buffer: [1024]u8 = undefined;
@@ -59,12 +60,6 @@ pub fn convertFromArgs(
         try convert(arg, from, to);
     }
 }
-
-pub const Base = enum {
-    dec,
-    hex,
-    bin,
-};
 
 const ConvertError =
     std.fmt.ParseIntError ||
