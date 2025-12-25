@@ -5,10 +5,13 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const bases = [_]Base{
-        .dec,
-        .hex,
-        .bin,
+    const base_info = @typeInfo(Base).@"enum";
+    const bases: [base_info.fields.len]Base = comptime blk: {
+        var bases_local: [base_info.fields.len]Base = undefined;
+        for (base_info.fields, 0..) |field, idx| {
+            bases_local[idx] = @enumFromInt(field.value);
+        }
+        break :blk bases_local;
     };
 
     const BaseCombo = struct { from: Base, to: Base };
