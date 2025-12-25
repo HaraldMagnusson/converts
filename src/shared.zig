@@ -14,7 +14,6 @@ test bufferedPrint {
     try bufferedPrint("I have {s} daughter.\n", .{"one"});
 }
 
-/// TODO: test in linux
 pub fn stdinHasInput() bool {
     const stdin_handle = std.fs.File.stdin().handle;
     return !std.posix.isatty(stdin_handle);
