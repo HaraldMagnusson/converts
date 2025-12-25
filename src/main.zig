@@ -89,6 +89,7 @@ fn convert(data: []const u8, comptime from: Base, comptime to: Base) ConvertErro
         .dec => 10,
         .hex => 16,
         .bin => 2,
+        .oct => 8,
     };
     const nombre = std.fmt.parseInt(u256, data, base) catch |err| {
         std.log.debug("invalid input: {s}", .{data});
@@ -99,6 +100,7 @@ fn convert(data: []const u8, comptime from: Base, comptime to: Base) ConvertErro
         .dec => "d",
         .hex => "X",
         .bin => "b",
+        .oct => "o",
     };
     try bufferedPrint("{" ++ fmt ++ "}\n", .{nombre});
 }
